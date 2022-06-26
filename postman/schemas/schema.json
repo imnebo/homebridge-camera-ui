@@ -1,0 +1,2177 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "camera.ui API",
+      "description": "",
+      "version": "1.1.17",
+      "contact": {
+        "name": "camera.ui",
+        "url": "https://github.com/SeydX/camera.ui"
+      }
+    },
+    "tags": [
+      {
+        "name": "Authentication"
+      },
+      {
+        "name": "Backup"
+      },
+      {
+        "name": "Cameras"
+      },
+      {
+        "name": "Config"
+      },
+      {
+        "name": "Notifications"
+      },
+      {
+        "name": "Recordings"
+      },
+      {
+        "name": "Settings"
+      },
+      {
+        "name": "System"
+      },
+      {
+        "name": "Users"
+      }
+    ],
+    "servers": [],
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "oauth2",
+          "scheme": "bearer",
+          "bearerFormat": "JWT",
+          "flows": {
+            "password": {
+              "tokenUrl": "/api/auth/login",
+              "scopes": null
+            }
+          }
+        }
+      }
+    },
+    "paths": {
+      "/api/auth/login": {
+        "post": {
+          "tags": [
+            "Authentication"
+          ],
+          "summary": "Logs in a user",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User found and logged in successfully"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized (Bad username/password or token expired/invalid)"
+            },
+            "403": {
+              "description": "Forbidden (User not found)"
+            },
+            "422": {
+              "description": "Username and/or password not given"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/auth/logout": {
+        "post": {
+          "tags": [
+            "Authentication"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Logs out a user",
+          "responses": {
+            "200": {
+              "description": "Logged out successfully"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/auth/check": {
+        "get": {
+          "tags": [
+            "Authentication"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Checks user token status",
+          "responses": {
+            "200": {
+              "description": "Status OK"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/backup/download": {
+        "get": {
+          "tags": [
+            "Backup"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Download backup",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/backup/restore": {
+        "post": {
+          "tags": [
+            "Backup"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Restore backup",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/cameras": {
+        "get": {
+          "tags": [
+            "Cameras"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get all cameras",
+          "parameters": [
+            {
+              "in": "query",
+              "name": "cameras",
+              "description": "Cameras",
+              "example": "Camera One,Camera Two",
+              "type": "string"
+            },
+            {
+              "in": "query",
+              "name": "status",
+              "description": "Status",
+              "example": "Online,Offline",
+              "type": "string"
+            },
+            {
+              "in": "query",
+              "name": "start",
+              "type": "number",
+              "description": "Start index"
+            },
+            {
+              "in": "query",
+              "name": "page",
+              "type": "number",
+              "description": "Page"
+            },
+            {
+              "in": "query",
+              "name": "pageSize",
+              "type": "number",
+              "description": "Page size"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Cameras"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Creates new camera",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "videoConfig": {
+                      "type": "object",
+                      "properties": {
+                        "source": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "409": {
+              "description": "Camera already exists"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Cameras"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Remove all cameras from config/ui",
+          "responses": {
+            "204": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/cameras/{name}": {
+        "get": {
+          "tags": [
+            "Cameras"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get specific camera by name",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "name",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Name of the camera"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Cameras"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Change camera config by name",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "name",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Name of the camera"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Cameras"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Delete camera by name",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "name",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Name of the camera"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/cameras/{name}/settings": {
+        "get": {
+          "tags": [
+            "Cameras"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get camera settings",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "name",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Name of the camera"
+            },
+            {
+              "in": "query",
+              "name": "buffer",
+              "schema": {
+                "type": "boolean"
+              },
+              "description": "Returns camera settings"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/cameras/{name}/snapshot": {
+        "get": {
+          "tags": [
+            "Cameras"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get camera snapshot by name",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "name",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Name of the camera"
+            },
+            {
+              "in": "query",
+              "name": "buffer",
+              "schema": {
+                "type": "boolean"
+              },
+              "description": "Returns a buffer of the snapshot"
+            },
+            {
+              "in": "query",
+              "name": "fromSubSource",
+              "schema": {
+                "type": "boolean"
+              },
+              "description": "Get snapshot from sub source"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/cameras/{name}/status": {
+        "get": {
+          "tags": [
+            "Cameras"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get camera status by name",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "name",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Name of the camera"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/cameras/{name}/prebuffering/restart": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Restart Camera Prebuffering",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/cameras/{name}/prebuffering/stop": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Stop Camera Prebuffering",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/cameras/{name}/videoanalysis/restart": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Restart Camera Videoanalysis",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/cameras/{name}/videoanalysis/stop": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Stop Camera Videoanalysis",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/cameras/{name}/motion/start": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Trigger motion",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/cameras/{name}/motion/reset": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Reset motion",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/config": {
+        "get": {
+          "tags": [
+            "Config"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get interface/plugin config",
+          "parameters": [
+            {
+              "in": "query",
+              "name": "target",
+              "schema": {
+                "type": "string"
+              },
+              "description": "Target config (ui | plugin | all)"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/config/download": {
+        "get": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get config.json",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/config/stat": {
+        "get": {
+          "tags": [
+            "Config"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get Config file info",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/config/{target}": {
+        "get": {
+          "tags": [
+            "Config"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get specific config setting",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "target",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Config target"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/notifications": {
+        "get": {
+          "tags": [
+            "Notifications"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get all notifications",
+          "parameters": [
+            {
+              "in": "query",
+              "name": "cameras",
+              "description": "Cameras",
+              "example": "Camera One,Camera Two",
+              "type": "string"
+            },
+            {
+              "in": "query",
+              "name": "labels",
+              "description": "Labels",
+              "example": "Human,Person,Face",
+              "type": "string"
+            },
+            {
+              "in": "query",
+              "name": "type",
+              "description": "Type",
+              "example": "Snapshot,Video",
+              "type": "string"
+            },
+            {
+              "in": "query",
+              "name": "start",
+              "type": "number",
+              "description": "Start index"
+            },
+            {
+              "in": "query",
+              "name": "page",
+              "type": "number",
+              "description": "Page"
+            },
+            {
+              "in": "query",
+              "name": "pageSize",
+              "type": "number",
+              "description": "Page size"
+            },
+            {
+              "in": "query",
+              "name": "from",
+              "description": "Start Date",
+              "example": "2020-01-01",
+              "format": "date",
+              "pattern": "YYYY-MM-DD",
+              "minLength": 0,
+              "maxLength": 10
+            },
+            {
+              "in": "query",
+              "name": "to",
+              "description": "End Date",
+              "example": "2020-02-01",
+              "format": "date",
+              "pattern": "YYYY-MM-DD",
+              "minLength": 0,
+              "maxLength": 10
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Notifications"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Creates new notification",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "camera": {
+                      "type": "string"
+                    },
+                    "trigger": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Notifications"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Remove all notifications",
+          "responses": {
+            "204": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/notifications/{id}": {
+        "get": {
+          "tags": [
+            "Notifications"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get specific notifications by ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of the notification"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Notifications"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Delete notification by id",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of the notifications"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/recordings": {
+        "get": {
+          "tags": [
+            "Recordings"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get all recordings",
+          "parameters": [
+            {
+              "in": "query",
+              "name": "cameras",
+              "description": "Cameras",
+              "example": "Camera One,Camera Two",
+              "type": "string"
+            },
+            {
+              "in": "query",
+              "name": "labels",
+              "description": "Labels",
+              "example": "Human,Person,Face",
+              "type": "string"
+            },
+            {
+              "in": "query",
+              "name": "type",
+              "description": "Type",
+              "example": "Snapshot,Video",
+              "type": "string"
+            },
+            {
+              "in": "query",
+              "name": "start",
+              "type": "number",
+              "description": "Start index"
+            },
+            {
+              "in": "query",
+              "name": "page",
+              "type": "number",
+              "description": "Page"
+            },
+            {
+              "in": "query",
+              "name": "pageSize",
+              "type": "number",
+              "description": "Page size"
+            },
+            {
+              "in": "query",
+              "name": "from",
+              "description": "Start Date",
+              "example": "2020-01-01",
+              "format": "date",
+              "pattern": "YYYY-MM-DD",
+              "minLength": 0,
+              "maxLength": 10
+            },
+            {
+              "in": "query",
+              "name": "to",
+              "description": "End Date",
+              "example": "2020-02-01",
+              "format": "date",
+              "pattern": "YYYY-MM-DD",
+              "minLength": 0,
+              "maxLength": 10
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Recordings"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Creates new recording",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "camera": {
+                      "type": "string"
+                    },
+                    "trigger": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Recordings"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Remove all recordings",
+          "responses": {
+            "204": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/recordings/{id}": {
+        "get": {
+          "tags": [
+            "Recordings"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get specific recording by ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of the recording"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Recordings"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Delete recording by id",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of the recordings"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/settings": {
+        "get": {
+          "tags": [
+            "Settings"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get interface settings",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/settings/{target}": {
+        "get": {
+          "tags": [
+            "Settings"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get specific interface setting",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "target",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Settings target"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Settings"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Change target settings",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "target",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Settings target"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/settings/reset": {
+        "put": {
+          "tags": [
+            "Settings"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Reset interface settings",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/log": {
+        "get": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get truncated log",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Clear log",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/db/download": {
+        "get": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get database.json",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/log/download": {
+        "get": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get truncated log",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/changelog": {
+        "get": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get camera.ui changelog",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "version",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Target package version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/disk": {
+        "get": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get system disk load",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/npm": {
+        "get": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get npm package details",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/restart": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Restart system",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/http/status": {
+        "get": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get HTTP server status",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/http/restart": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Restart HTTP server",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/http/stop": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Stop HTTP server",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/smtp/status": {
+        "get": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get SMTP server status",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/smtp/restart": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Restart SMTP server",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/smtp/stop": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Stop SMTP server",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/ftp/status": {
+        "get": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get FTP server status",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/ftp/restart": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Restart FTP server",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/ftp/stop": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Stop FTP server",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/mqtt/status": {
+        "get": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get MQTT server status",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/mqtt/restart": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Restart MQTT client",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/mqtt/stop": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Stop MQTT client",
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/system/update": {
+        "put": {
+          "tags": [
+            "System"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Update system",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "target",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Target package version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/users": {
+        "get": {
+          "tags": [
+            "Users"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get all users",
+          "parameters": [
+            {
+              "in": "query",
+              "name": "start",
+              "schema": {
+                "type": "number"
+              },
+              "description": "Start index"
+            },
+            {
+              "in": "query",
+              "name": "page",
+              "schema": {
+                "type": "number"
+              },
+              "description": "Page"
+            },
+            {
+              "in": "query",
+              "name": "pageSize",
+              "schema": {
+                "type": "number"
+              },
+              "description": "Page size"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Users"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Creates new user",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "permissionLevel": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Successfull"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "409": {
+              "description": "User already exists"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/users/{name}": {
+        "get": {
+          "tags": [
+            "Users"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Get specific user by name",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "name",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Name of the user"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Users"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Change user credentials by name",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "name",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Name of the user"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Users"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Delete user by name",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "name",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "Name of the user"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfull"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "404": {
+              "description": "Not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      }
+    }
+  }
